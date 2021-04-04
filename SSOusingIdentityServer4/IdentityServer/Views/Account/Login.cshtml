@@ -1,0 +1,40 @@
+﻿@model IdentityServer.Models.Account.Login
+@{
+    var errorState = ViewData.ModelState.GetValueOrDefault("LoginError");
+    var errorMessages = errorState?.Errors.Select(x => x.ErrorMessage) ?? Array.Empty<string>();
+}
+
+<h2>ログイン</h2>
+
+@if (errorMessages.Any())
+{
+    <div>
+        @foreach (var errorMessage in errorMessages)
+        {
+            <div>@errorMessage</div>
+        }
+    </div>
+}
+
+<form asp-action="Login" method="post" asp-route-returnUrl="@ViewData["returnUrl"]">
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div>
+        <input asp-for="RememberMe" type="checkbox" />
+        <label asp-for="RememberMe"></label>
+        <span asp-validation-for="RememberMe"></span>
+    </div>
+    <button type="submit">ログイン</button>
+</form>
+
+<div>
+    <a asp-action="Register" asp-route-returnUrl="@ViewData["returnUrl"]">新規登録する</a>
+</div>

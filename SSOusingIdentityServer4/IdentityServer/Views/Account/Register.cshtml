@@ -1,0 +1,53 @@
+﻿@model IdentityServer.Models.Account.Register
+@{
+    var errorState = ViewData.ModelState.GetValueOrDefault("RegisterError");
+    var errorMessages = errorState?.Errors.Select(x => x.ErrorMessage) ?? Array.Empty<string>();
+
+    var createUserErrorState = ViewData.ModelState.GetValueOrDefault("CreateUserError");
+    var createUserErrorMessages = createUserErrorState?.Errors.Select(x => x.ErrorMessage) ?? Array.Empty<string>();
+}
+
+<h2>新規登録</h2>
+
+@if (errorMessages.Any())
+{
+    <div>
+        @foreach (var errorMessage in errorMessages)
+        {
+            <div>@errorMessage</div>
+        }
+    </div>
+}
+
+@if (createUserErrorMessages.Any())
+{
+    <div>
+        @foreach (var errorMessage in createUserErrorMessages)
+        {
+            <div>@errorMessage</div>
+        }
+    </div>
+}
+
+<form asp-action="Register" method="post" asp-route-returnUrl="@ViewData["returnUrl"]">
+    <div>
+        <label asp-for="UserName"></label>
+        <input asp-for="UserName" />
+        <span asp-validation-for="UserName"></span>
+    </div>
+    <div>
+        <label asp-for="Email"></label>
+        <input asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div>
+        <label asp-for="Password"></label>
+        <input asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <button type="submit">新規登録</button>
+</form>
+
+<div>
+    <a asp-action="Login" asp-route-returnUrl="@ViewData["returnUrl"]">ログインする</a>
+</div>
