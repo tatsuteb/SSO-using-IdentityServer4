@@ -7,6 +7,7 @@ namespace ApiServer.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
+        [AllowAnonymous]
         [HttpGet("greetings")]
         public string GetMessage()
         {
