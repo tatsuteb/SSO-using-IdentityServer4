@@ -43,6 +43,23 @@ namespace IdentityServer
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<AppIdentityDbContext>();
 
+            var builder = services.AddIdentityServer(options =>
+                {
+                    // ログイン画面等のパスを変えたい場合はここでも指定できる
+                    // options.UserInteraction.LoginUrl = "/Login";
+                    // options.UserInteraction.LogoutUrl = "/Logout";
+                    // options.UserInteraction.ErrorUrl = "/Error";
+                })
+                .AddInMemoryIdentityResources(Config.IdentityResources)
+                .AddInMemoryApiScopes(Config.ApiScopes)
+                .AddInMemoryClients(Config.Clients)
+                .AddAspNetIdentity<IdentityUser>();
+
+            if (!_environment.IsProduction())
+            {
+                builder.AddDeveloperSigningCredential();
+            }
+
             // ログイン画面等のパスを変えたい場合はここで指定できる
             // services.ConfigureApplicationCookie(config =>
             // {
@@ -63,7 +80,8 @@ namespace IdentityServer
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            // UseIdentityServer() の中で、UseAuthentication() も呼び出される
+            app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
