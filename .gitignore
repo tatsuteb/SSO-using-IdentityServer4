@@ -3,3 +3,4 @@ SSOusingIdentityServer4/ApiServer/bin/
 SSOusingIdentityServer4/ApiServer/obj/
 SSOusingIdentityServer4/IdentityServer/bin/
 SSOusingIdentityServer4/IdentityServer/obj/
+SSOusingIdentityServer4/IdentityServer/tempkey.jwk
