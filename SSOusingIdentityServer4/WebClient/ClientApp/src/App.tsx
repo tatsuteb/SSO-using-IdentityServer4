@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Switch, Route } from 'react-router-dom';
+import { AxiosProvider } from './components/commons/AxiosProvider';
+import { userAuthContext } from './components/commons/UserAuthProvider';
 import Home from './components/Home';
+import LogInCallback from './components/LogInCallback';
+import LogInMenu from './components/LogInMenu';
 
 const App = () => {
+  const auth = useContext(userAuthContext);
+
   const [errorMessage, setErrorMessage] = useState('');
-  
+
   const addErrorMessage = (message: string) => {
     const newErrorMessage = errorMessage !== ''
       ? `${errorMessage}\n${message}`
@@ -12,15 +18,19 @@ const App = () => {
 
     setErrorMessage(newErrorMessage);
   };
-  
+
   return (
-    <>
-      <h1>Web Client</h1>
+    <AxiosProvider accessToken={auth?.userInfo?.accessToken}>
+      <header>
+        <h1>Web Client</h1>
+        <LogInMenu />
+      </header>
 
       <main>
-          <Switch>
-            <Route path='/' exact render={() => <Home addErrorMessage={addErrorMessage} />} />
-          </Switch>
+        <Switch>
+          <Route path='/' exact render={() => <Home addErrorMessage={addErrorMessage} />} />
+          <Route path='/callback' component={LogInCallback} />
+        </Switch>
       </main>
 
       <div style={{
@@ -32,7 +42,7 @@ const App = () => {
         whiteSpace: 'pre',
         overflow: 'scroll'
       }}>{errorMessage !== '' && errorMessage}</div>
-    </>
+    </AxiosProvider>
   );
 }
 
