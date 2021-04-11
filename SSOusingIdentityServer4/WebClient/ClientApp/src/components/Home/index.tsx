@@ -1,21 +1,19 @@
 import { useState } from 'react';
-import axios from 'axios';
+import { useAxios } from '../commons/AxiosProvider';
 
 interface Props {
   addErrorMessage: (message: string) => void;
 }
 
 const Home = (props: Props) => {
+  const axios = useAxios();
+
   const [message, setMessage] = useState('');
   const [messageFromProtectedApi, setMessageFromProtectedApi] = useState('');
   
   const onGetMessageHandler = async () => {
     try {
-      const response = await axios.get(
-        '/api/message/greetings',
-        {
-          baseURL: 'https://localhost:6001'
-        });
+      const response = await axios.get('/api/message/greetings');
       setMessage(response.data);
     } catch (e) {
       props.addErrorMessage(`失敗：GET /api/message/greetings\n${e.message}`);
@@ -24,11 +22,7 @@ const Home = (props: Props) => {
 
   const onGetMessageFromProtectedApiHandler = async () => {
     try {
-      const response = await axios.get(
-        '/api/message/protected',
-        {
-          baseURL: 'https://localhost:6001'
-        });
+      const response = await axios.get('/api/message/protected');
       setMessageFromProtectedApi(response.data);
     } catch (e) {
       props.addErrorMessage(`失敗：GET /api/message/protected\n${e.message}`);

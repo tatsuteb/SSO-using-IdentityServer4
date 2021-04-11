@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using IdentityServer4.Services;
 
 namespace IdentityServer.Controllers
 {
@@ -10,14 +11,17 @@ namespace IdentityServer.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly IIdentityServerInteractionService _identityServerInteractionService;
 
 
         public AccountController(
             SignInManager<IdentityUser> signInManager, 
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager,
+            IIdentityServerInteractionService identityServerInteractionService)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _identityServerInteractionService = identityServerInteractionService;
         }
 
 
@@ -74,7 +78,9 @@ namespace IdentityServer.Controllers
                     throw new Exception("ログインに失敗しました。");
                 }
 
-                return LocalRedirect(returnUrl);
+                return Url.IsLocalUrl(returnUrl)
+                    ? (IActionResult) LocalRedirect(returnUrl)
+                    : Redirect(returnUrl);
             }
             catch (Exception e)
             {
@@ -133,7 +139,9 @@ namespace IdentityServer.Controllers
                     throw new Exception("ログインに失敗しました。");
                 }
 
-                return LocalRedirect(returnUrl);
+                return Url.IsLocalUrl(returnUrl)
+                    ? (IActionResult) LocalRedirect(returnUrl)
+                    : Redirect(returnUrl);
             }
             catch (Exception e)
             {
@@ -153,11 +161,17 @@ namespace IdentityServer.Controllers
 
         #region ログアウト
 
-        public async Task<IActionResult> Logout()
+        public async Task<IActionResult> Logout([FromQuery]string logoutId)
         {
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction(actionName: "Index", controllerName: "Home");
+            var logout = await _identityServerInteractionService.GetLogoutContextAsync(logoutId);
+            var postRedirectUrl = logout?.PostLogoutRedirectUri;
+
+            // NOTE: JSクライアントから受け取ったPostLogoutRedirectUriとIdentityServer4に登録しているPostLogoutRedirectUriが一致しない場合はNullになる
+            return postRedirectUrl != null
+                ? (IActionResult) Redirect(postRedirectUrl)
+                : RedirectToAction("Index", "Home");
         }
 
         #endregion
