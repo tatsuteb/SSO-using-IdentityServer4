@@ -4,7 +4,7 @@
 各ステップでタグ付けしています。
 Zenn、Qiita に投稿した以下の記事と対応しています。
 
-https://zenn.dev/tatsuteb/articles/751459a328fc80
+https://zenn.dev/tatsuteb/articles/751459a328fc80  
 https://qiita.com/tatsuteb/items/573e42ce3e47daf0d392
 
 ## 構成
