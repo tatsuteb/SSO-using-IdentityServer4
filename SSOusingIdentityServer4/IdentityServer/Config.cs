@@ -16,7 +16,8 @@ namespace IdentityServer
         public static IEnumerable<ApiScope> ApiScopes =>
             new List<ApiScope>
             {
-                new ApiScope("api1", "Protected API sample.")
+                new ApiScope("api1", "Protected API sample."),
+                new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
             };
 
         public static IEnumerable<Client> Clients =>
@@ -43,7 +44,8 @@ namespace IdentityServer
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "api1",
+                        IdentityServerConstants.LocalApi.ScopeName
                     }
                 }
             };
