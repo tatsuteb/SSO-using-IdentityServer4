@@ -60,6 +60,19 @@ namespace IdentityServer
                 builder.AddDeveloperSigningCredential();
             }
 
+            services.AddLocalApiAuthentication();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "default",
+                    corsPolicyBuilder =>
+                    {
+                        corsPolicyBuilder.WithOrigins(new []{ "https://localhost:7001" })
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
+
             // ログイン画面等のパスを変えたい場合はここで指定できる
             // services.ConfigureApplicationCookie(config =>
             // {
@@ -79,6 +92,8 @@ namespace IdentityServer
             }
 
             app.UseRouting();
+            
+            app.UseCors("default");
 
             // UseIdentityServer() の中で、UseAuthentication() も呼び出される
             app.UseIdentityServer();
