@@ -20,7 +20,7 @@ const useUserAuth = (): UserAuth => {
     client_id: 'js',
     redirect_uri: 'https://localhost:7001/callback',
     response_type: 'code',
-    scope: 'openid profile offline_access api1',
+    scope: 'openid profile offline_access api1 IdentityServerApi',
     post_logout_redirect_uri: 'https://localhost:7001',
     automaticSilentRenew: true,
     silentRequestTimeout: 3000,
